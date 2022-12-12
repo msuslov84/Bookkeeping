@@ -5,10 +5,7 @@ import org.example.models.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Mikhail Suslov
@@ -48,5 +45,17 @@ public class PersonController {
     public String edit(Model model, @PathVariable("id") int id) {
         model.addAttribute("person", personDAO.get(id));
         return "people/edit";
+    }
+
+    @PostMapping()
+    public String create(@ModelAttribute("person") Person person) {
+        personDAO.save(person);
+        return "redirect:/people";
+    }
+
+    @PatchMapping("/{id}")
+    public String update(@ModelAttribute("person") Person person, @PathVariable("id") int id) {
+        personDAO.update(id, person);
+        return "redirect:/people";
     }
 }

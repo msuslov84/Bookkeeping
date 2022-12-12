@@ -15,6 +15,7 @@ import java.util.List;
 public class PersonDAO {
 
     private final JdbcTemplate jdbcTemplate;
+    private final BeanPropertyRowMapper<Person> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Person.class);
 
     @Autowired
     public PersonDAO(JdbcTemplate jdbcTemplate) {
@@ -22,22 +23,20 @@ public class PersonDAO {
     }
 
     public List<Person> getAll() {
-        return jdbcTemplate.query("SELECT * FROM person", BeanPropertyRowMapper.newInstance(Person.class));
+        return jdbcTemplate.query("SELECT person_id as id, name, year FROM person", ROW_MAPPER);
     }
 
     public Person get(int id) {
-        return jdbcTemplate.query("SELECT * FROM person WHERE person_id=?", BeanPropertyRowMapper.newInstance(Person.class), id)
+        return jdbcTemplate.query("SELECT person_id as id, name, year FROM person WHERE person_id=?", ROW_MAPPER, id)
                 .stream().findAny().orElse(null);
     }
 
     public void save(Person person) {
-        jdbcTemplate.update("INSERT INTO person(name,year) values(?,?) ",
-                BeanPropertyRowMapper.newInstance(Person.class), person.getName(), person.getYear());
+        jdbcTemplate.update("INSERT INTO person(name,year) values(?,?) ", person.getName(), person.getYear());
     }
 
     public void update(int id, Person person) {
-        jdbcTemplate.update("UPDATE person SET name=?, year=? WHERE person_id=?",
-                BeanPropertyRowMapper.newInstance(Person.class), person.getName(), person.getYear(), id);
+        jdbcTemplate.update("UPDATE person SET name=?, year=? WHERE person_id=?", person.getName(), person.getYear(), id);
     }
 
     public void delete(int id) {

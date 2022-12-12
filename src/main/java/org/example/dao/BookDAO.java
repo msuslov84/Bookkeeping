@@ -15,6 +15,7 @@ import java.util.List;
 public class BookDAO {
 
     private final JdbcTemplate jdbcTemplate;
+    private final BeanPropertyRowMapper<Book> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Book.class);
 
     @Autowired
     public BookDAO(JdbcTemplate jdbcTemplate) {
@@ -22,22 +23,20 @@ public class BookDAO {
     }
 
     public List<Book> getAll() {
-        return jdbcTemplate.query("SELECT * FROM book", new BeanPropertyRowMapper<>(Book.class));
+        return jdbcTemplate.query("SELECT book_id as id, title, author, year FROM book", ROW_MAPPER);
     }
 
     public Book get(int id) {
-        return jdbcTemplate.query("SELECT * FROM book WHERE book_id=?", new BeanPropertyRowMapper<>(Book.class), id)
+        return jdbcTemplate.query("SELECT book_id as id, title, author, year FROM book WHERE book_id=?", ROW_MAPPER, id)
                 .stream().findAny().orElse(null);
     }
 
     public void save(Book book) {
-        jdbcTemplate.update("INSERT INTO book(title,author,year) values(?,?,?) ",
-                new BeanPropertyRowMapper<>(Book.class), book.getTitle(), book.getAuthor(), book.getYear());
+        jdbcTemplate.update("INSERT INTO book(title,author,year) values(?,?,?) ", book.getTitle(), book.getAuthor(), book.getYear());
     }
 
     public void update(int id, Book book) {
-        jdbcTemplate.update("UPDATE book SET title=?, author=?, year=? WHERE book_id=?",
-                new BeanPropertyRowMapper<>(Book.class), book.getTitle(), book.getAuthor(), book.getYear(), id);
+        jdbcTemplate.update("UPDATE book SET title=?, author=?, year=? WHERE book_id=?", book.getTitle(), book.getAuthor(), book.getYear(), id);
     }
 
     public void delete(int id) {
