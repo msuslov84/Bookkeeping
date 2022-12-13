@@ -23,11 +23,11 @@ public class BookDAO {
     }
 
     public List<Book> getAll() {
-        return jdbcTemplate.query("SELECT book_id as id, title, author, year FROM book", ROW_MAPPER);
+        return jdbcTemplate.query("SELECT book_id as id, title, author, year, person_id FROM book", ROW_MAPPER);
     }
 
     public Book get(int id) {
-        return jdbcTemplate.query("SELECT book_id as id, title, author, year FROM book WHERE book_id=?", ROW_MAPPER, id)
+        return jdbcTemplate.query("SELECT book_id as id, title, author, year, person_id FROM book WHERE book_id=?", ROW_MAPPER, id)
                 .stream().findAny().orElse(null);
     }
 
@@ -36,7 +36,8 @@ public class BookDAO {
     }
 
     public void update(int id, Book book) {
-        jdbcTemplate.update("UPDATE book SET title=?, author=?, year=? WHERE book_id=?", book.getTitle(), book.getAuthor(), book.getYear(), id);
+        jdbcTemplate.update("UPDATE book SET title=?, author=?, year=?, person_id=? WHERE book_id=?",
+                book.getTitle(), book.getAuthor(), book.getYear(), book.getKeeper().getId(), id);
     }
 
     public void delete(int id) {
