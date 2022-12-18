@@ -1,5 +1,6 @@
 package org.example.controllers;
 
+import org.example.dao.BookDAO;
 import org.example.dao.PersonDAO;
 import org.example.models.Person;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,12 @@ import org.springframework.web.bind.annotation.*;
 public class PersonController {
 
     private final PersonDAO personDAO;
+    private final BookDAO bookDAO;
 
     @Autowired
-    public PersonController(PersonDAO personDAO) {
+    public PersonController(PersonDAO personDAO, BookDAO bookDAO) {
         this.personDAO = personDAO;
+        this.bookDAO = bookDAO;
     }
 
     @GetMapping()
@@ -32,6 +35,7 @@ public class PersonController {
     public String show(Model model, @PathVariable("id") int id) {
         // Get person by ID from database and pass them to http-page
         model.addAttribute("person", personDAO.get(id));
+        model.addAttribute("books", bookDAO.getAllByOwner(id));
         return "people/show";
     }
 

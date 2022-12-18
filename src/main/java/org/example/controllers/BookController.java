@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 /**
  * @author Mikhail Suslov
  */
@@ -33,10 +35,15 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
-    public String show(Model model, @ModelAttribute("keeper") Person person, @PathVariable("id") int id) {
+    public String show(Model model, @PathVariable("id") int id, @ModelAttribute("person") Person person) {
         // Get book by ID from database and pass them to http-page
+        Optional<Person> owner = bookDao.getOwner(id);
+        if (owner.isPresent()) {
+            model.addAttribute("owner", owner.get());
+        } else {
+            model.addAttribute("people", personDAO.getAll());
+        }
         model.addAttribute("book", bookDao.get(id));
-        model.addAttribute("people", personDAO.getAll());
         return "books/show";
     }
 
@@ -65,10 +72,14 @@ public class BookController {
     }
 
     @PatchMapping("/{id}/assign")
-    public String setReader(@ModelAttribute("keeper") Person person, @PathVariable("id") int id) {
-        Book bookForSet = bookDao.get(id);
-        bookForSet.setKeeper(personDAO.get(person.getId()));
-        bookDao.update(id, bookForSet);
+    public String assign(@ModelAttribute("person") Person person, @PathVariable("id") int id) {
+        bookDao.assign(id, person.getId());
+        return "redirect:/books/" + id;
+    }
+
+    @PatchMapping("/{id}/release")
+    public String release(@PathVariable("id") int id) {
+        bookDao.release(id);
         return "redirect:/books/" + id;
     }
 }

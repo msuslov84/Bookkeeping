@@ -16,7 +16,6 @@ public class Book {
     @NotEmpty(message = "Year of publishing must not be empty")
     @Min(value = 1500, message = "Year of publishing must be more then 1500")
     private int year;
-    private Person keeper;
 
     public Book(int id, String title, String author, int year) {
         this.id = id;
@@ -58,13 +57,5 @@ public class Book {
 
     public void setYear(int year) {
         this.year = year;
-    }
-
-    public Person getKeeper() {
-        return keeper;
-    }
-
-    public void setKeeper(Person keeper) {
-        this.keeper = keeper;
     }
 }
