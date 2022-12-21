@@ -10,6 +10,10 @@
     <a th:href="@{/books/{id}(id=${book.getId()})}"
        th:text="${book.getTitle() + ', ' + book.getAuthor() + ', '+ book.getYear()}">book</a>
 </div>
-
+<hr/>
+<a th:href="@{/books/new}">Добавить книгу</a>
+<br/>
+<br/>
+<a th:href="@{/people}">Перейти к списку пользователей библиотеки</a>
 </body>
 </html>
