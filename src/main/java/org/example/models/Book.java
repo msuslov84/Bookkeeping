@@ -2,6 +2,7 @@ package org.example.models;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 /**
  * @author Mikhail Suslov
@@ -9,22 +10,22 @@ import javax.validation.constraints.NotEmpty;
 public class Book {
 
     private int id;
-    @NotEmpty(message = "Title must not be empty")
+    @NotEmpty(message = "Название не должно быть пустым")
+    @Size(min = 2, max = 100, message = "Длина названия книги должна быть в пределах 2-100 символов")
     private String title;
-    @NotEmpty(message = "Author must not be empty")
+    @NotEmpty(message = "Автор должен быть заполнен")
+    @Size(min = 2, max = 100, message = "Длина имени автора должна быть в пределах 2-100 символов")
     private String author;
-    @NotEmpty(message = "Year of publishing must not be empty")
-    @Min(value = 1500, message = "Year of publishing must be more then 1500")
+    @Min(value = 1500, message = "Год издания должен быть больше 1500")
     private int year;
 
-    public Book(int id, String title, String author, int year) {
-        this.id = id;
+    public Book() {
+    }
+
+    public Book(String title, String author, int year) {
         this.title = title;
         this.author = author;
         this.year = year;
-    }
-
-    public Book() {
     }
 
     public int getId() {

@@ -10,15 +10,13 @@ import javax.validation.constraints.Size;
 public class Person {
 
     private int id;
-    @NotEmpty(message = "Name must not be empty")
-    @Size(min = 3, max = 100, message = "Name's length must be between 3 and 100 characters")
+    @NotEmpty(message = "ФИО не должно быть пустым")
+    @Size(min = 3, max = 100, message = "Длина ФИО должна быть в пределах 3-100 символов")
     private String name;
-    @NotEmpty(message = "Year of birth must not be empty")
-    @Min(value = 1900, message = "Year of birth must be more then 1900")
+    @Min(value = 1900, message = "Год рождения должен быть более 1900")
     private int year;
 
-    public Person(int id, String name, int year) {
-        this.id = id;
+    public Person(String name, int year) {
         this.name = name;
         this.year = year;
     }

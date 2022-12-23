@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Mikhail Suslov
@@ -41,5 +42,10 @@ public class PersonDAO {
 
     public void delete(int id) {
         jdbcTemplate.update("DELETE FROM person WHERE person_id=?", id);
+    }
+
+    public Optional<Person> getByName(String name) {
+        return jdbcTemplate.query("SELECT person_id as id, name, year FROM person WHERE name=?", ROW_MAPPER, name)
+                .stream().findAny();
     }
 }
